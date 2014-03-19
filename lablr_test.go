@@ -1,6 +1,7 @@
 package lablr_test
 
 import (
+	"encoding/xml"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/wingyplus/lablr"
@@ -96,6 +97,121 @@ var _ = Describe("Lablr", func() {
 
 					Expect(properties[0].PropertyName()).To(Equal("test_propertyName"))
 					Expect(properties[1].PropertyName()).To(Equal("test_propertyName_2"))
+				})
+			})
+		})
+	})
+	Describe("Share config custom generator", func() {
+		Describe("Model config", func() {
+			Describe("FieldVisibility", func() {
+				Describe("Field", func() {
+					It("should be generate from Property object", func() {
+						var property lablr.Property = lablr.Property{Name: "test:testProperty"}
+						var field lablr.Field = lablr.NewField(property)
+						Expect(field.Id).To(Equal("test:testProperty"))
+
+						property = lablr.Property{Name: "test:fieldVisibility"}
+						field = lablr.NewField(property)
+						Expect(field.Id).To(Equal("test:fieldVisibility"))
+					})
+					Context("marshall XML", func() {
+						It("should be marshall to expect XML", func() {
+							expectXML := `<show id="test:testProperty"></show>`
+							actualXML, _ := xml.Marshal(&lablr.Field{Id: "test:testProperty"})
+
+							Expect(string(actualXML)).To(Equal(expectXML))
+
+							expectXML = `<show id="test:testProperty2"></show>`
+							actualXML, _ = xml.Marshal(lablr.Field{Id: "test:testProperty2"})
+
+							Expect(string(actualXML)).To(Equal(expectXML))
+						})
+					})
+				})
+				It("should be return List of Field", func() {
+					var fieldVisibility *lablr.FieldVisibility = new(lablr.FieldVisibility)
+
+					fieldVisibility.Add(lablr.Field{Id: "test:testProperty"})
+					Expect(fieldVisibility.Fields[0].Id).To(Equal("test:testProperty"))
+
+					fieldVisibility.Add(lablr.Field{Id: "test:testProperty"})
+					Expect(fieldVisibility.Fields[1].Id).To(Equal("test:testProperty"))
+				})
+				Context("marshall to xml", func() {
+					It("should be return expect XML", func() {
+						var fieldVisibility *lablr.FieldVisibility = new(lablr.FieldVisibility)
+						fieldVisibility.Add(lablr.Field{Id: "test:testProperty"})
+
+						expectXML := `<field-visibility><show id="test:testProperty"></show></field-visibility>`
+						actualXML, _ := xml.Marshal(fieldVisibility)
+
+						Expect(string(actualXML)).To(Equal(expectXML))
+
+						fieldVisibility.Add(lablr.Field{Id: "test:testProperty"})
+						expectXML = `<field-visibility><show id="test:testProperty"></show><show id="test:testProperty"></show></field-visibility>`
+						actualXML, _ = xml.Marshal(fieldVisibility)
+
+						Expect(string(actualXML)).To(Equal(expectXML))
+					})
+				})
+			})
+			Describe("Form", func() {
+				It("should has id", func() {
+					var form lablr.Form = lablr.Form{Id: "search"}
+					Expect(form.Id).To(Equal("search"))
+
+					form = lablr.Form{Id: "doclib-inline-edit"}
+					Expect(form.Id).To(Equal("doclib-inline-edit"))
+				})
+				It("should has field-visibility", func() {
+					var fieldVisibility *lablr.FieldVisibility = new(lablr.FieldVisibility)
+					fieldVisibility.Add(lablr.Field{Id: "test:testProperty"})
+
+					var form lablr.Form = lablr.Form{Id: "search", FieldVisibility: fieldVisibility}
+					Expect(form.FieldVisibility.Fields[0].Id).To(Equal("test:testProperty"))
+				})
+				Context("marshall to XML", func() {
+					It("should marshall to expect XML", func() {
+						var fieldVisibility *lablr.FieldVisibility = new(lablr.FieldVisibility)
+						fieldVisibility.Add(lablr.Field{Id: "test:testProperty"})
+
+						var form lablr.Form = lablr.Form{Id: "search", FieldVisibility: fieldVisibility}
+
+						expectXML := `<form id="search"><field-visibility><show id="test:testProperty"></show></field-visibility></form>`
+						actualXML, _ := xml.Marshal(&form)
+
+						Expect(string(actualXML)).To(Equal(expectXML))
+					})
+				})
+			})
+			Describe("Config", func() {
+				It("should has forms", func() {
+					var config *lablr.Config = &lablr.Config{}
+					config.AddForm(lablr.Form{Id: "search"})
+
+					Expect(len(config.Forms)).To(Equal(1))
+				})
+				It("should be evaluator", func() {
+					var config *lablr.Config = &lablr.Config{Evaluator: "string-compare"}
+					Expect(config.Evaluator).To(Equal("string-compare"))
+				})
+				It("should has condition", func() {
+					var config *lablr.Config = &lablr.Config{Condition: "test:testType"}
+					Expect(config.Condition).To(Equal("test:testType"))
+				})
+				Context("marshal to XML", func() {
+					It("should be return expect XML", func() {
+						var fieldVisibility *lablr.FieldVisibility = new(lablr.FieldVisibility)
+						fieldVisibility.Add(lablr.Field{Id: "test:testProperty"})
+						var form lablr.Form = lablr.Form{Id: "search", FieldVisibility: fieldVisibility}
+						var config *lablr.Config = &lablr.Config{Evaluator: "string-compare", Condition: "test:testType"}
+						config.AddForm(form)
+
+						expectXML := `<config evaluator="string-compare" condition="test:testType"><forms><form id="search"><field-visibility><show id="test:testProperty"></show></field-visibility></form></forms></config>`
+						actualXML, _ := xml.Marshal(config)
+
+						Expect(string(actualXML)).To(Equal(expectXML))
+					})
 				})
 			})
 		})
