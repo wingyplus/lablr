@@ -41,6 +41,9 @@ var _ = Describe("Lablr", func() {
 							<property name="test:propertyName">
 								<type>d:text</type>
 							</property>
+							<property name="test:propertyName_2">
+								<type>d:text</type>
+							</property>
 						</properties>
 					</type>
 				</types>
@@ -71,15 +74,28 @@ var _ = Describe("Lablr", func() {
 					Expect(modelType.Title).To(Equal("Test Name"))
 				})
 			})
+			Context("convert name", func() {
+				It("should be convert from test:testModel to test_testModel", func() {
+					Expect(model.ModelName()).To(Equal("test_testModel"))
+				})
+			})
 		})
 
 		Describe("Property", func() {
 			Context("unmarshall from xml model string", func() {
 				It("should be return Property from Type object after parsing", func() {
 					var properties []lablr.Property = model.Types[0].Properties
-					Expect(len(properties)).To(Equal(1))
+					Expect(len(properties)).To(Equal(2))
 
 					Expect(properties[0].Name).To(Equal("test:propertyName"))
+				})
+			})
+			Context("convert name", func() {
+				It("should be convert from test:propertyName to test_propertyName", func() {
+					var properties []lablr.Property = model.Types[0].Properties
+
+					Expect(properties[0].PropertyName()).To(Equal("test_propertyName"))
+					Expect(properties[1].PropertyName()).To(Equal("test_propertyName_2"))
 				})
 			})
 		})

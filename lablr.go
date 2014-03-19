@@ -1,6 +1,9 @@
 package lablr
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+	"strings"
+)
 
 type Model struct {
 	Name        string `xml:"name,attr"`
@@ -20,9 +23,17 @@ type Property struct {
 	Name string `xml:"name,attr"`
 }
 
+func (p Property) PropertyName() string {
+	return strings.Replace(p.Name, ":", "_", 1)
+}
+
 func NewModel(modelContent []byte) (model Model, err error) {
 	model = Model{}
 	err = xml.Unmarshal(modelContent, &model)
 
 	return
+}
+
+func (m Model) ModelName() string {
+	return strings.Replace(m.Name, ":", "_", 1)
 }
