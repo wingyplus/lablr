@@ -20,9 +20,9 @@ type Property struct {
 	Name string `xml:"name,attr"`
 }
 
-func NewModel(modelString string) (model Model, err error) {
+func NewModel(modelContent []byte) (model Model, err error) {
 	model = Model{}
-	err = xml.Unmarshal([]byte(modelString), &model)
+	err = xml.Unmarshal(modelContent, &model)
 
 	return
 }

@@ -14,37 +14,39 @@ func TestLablrSpecs(t *testing.T) {
 
 var _ = Describe("Lablr", func() {
 	Describe("Model unmarshaller", func() {
-		var model lablr.Model
-		var err error
-		var testModel string = `
-		<?xml version="1.0" encoding="UTF-8"?>
-		<model name="test:testModel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
-			<description>Test Model</description>
-			<author>test@mail.com</author>
-			<version>1.0</version>
+		var (
+			model     lablr.Model
+			err       error
+			testModel []byte = []byte(`
+			<?xml version="1.0" encoding="UTF-8"?>
+			<model name="test:testModel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+				<description>Test Model</description>
+				<author>test@mail.com</author>
+				<version>1.0</version>
 
-			<imports>
-				<import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
-				<import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
-			</imports>
+				<imports>
+					<import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+					<import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+				</imports>
 
-			<namespaces>
-				<namespace uri="http://www.alfresco.org/model/test/1.0" prefix="test" />
-			</namespaces>
+				<namespaces>
+					<namespace uri="http://www.alfresco.org/model/test/1.0" prefix="test" />
+				</namespaces>
 
-			<types>
-				<type name="test:typeName">
-					<title>Test Name</title>
-					<parent>cm:content</parent>
-					<properties>
-						<property name="test:propertyName">
-							<type>d:text</type>
-						</property>
-					</properties>
-				</type>
-			</types>
-		</model>
-		`
+				<types>
+					<type name="test:typeName">
+						<title>Test Name</title>
+						<parent>cm:content</parent>
+						<properties>
+							<property name="test:propertyName">
+								<type>d:text</type>
+							</property>
+						</properties>
+					</type>
+				</types>
+			</model>
+			`)
+		)
 		BeforeEach(func() {
 			model, err = lablr.NewModel(testModel)
 			Expect(err).To(BeNil())
