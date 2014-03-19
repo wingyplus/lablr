@@ -72,3 +72,19 @@ type Config struct {
 func (c *Config) AddForm(f Form) {
 	c.Forms = append(c.Forms, f)
 }
+
+func NewSearchConfig(t Type) (config *Config) {
+	fieldVisibility := new(FieldVisibility)
+	if len(t.Properties) != 0 {
+		for _, property := range t.Properties {
+			fieldVisibility.Add(NewField(property))
+		}
+	}
+
+	form := Form{Id: "search", FieldVisibility: fieldVisibility}
+
+	config = &Config{Evaluator: "model-type", Condition: t.Name}
+	config.AddForm(form)
+
+	return config
+}

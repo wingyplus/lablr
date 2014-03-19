@@ -216,4 +216,32 @@ var _ = Describe("Lablr", func() {
 			})
 		})
 	})
+	Describe("Search generator", func() {
+		It("should return search config", func() {
+			var config *lablr.Config = lablr.NewSearchConfig(lablr.Type{Name: "test:testType"})
+			Expect(config.Evaluator).To(Equal("model-type"))
+			Expect(config.Condition).To(Equal("test:testType"))
+
+			config = lablr.NewSearchConfig(lablr.Type{Name: "test:testType2"})
+			Expect(config.Condition).To(Equal("test:testType2"))
+
+			properties := []lablr.Property{
+				lablr.Property{Name: "test:testProperty"},
+			}
+			t := lablr.Type{Name: "test:testType", Properties: properties}
+			config = lablr.NewSearchConfig(t)
+			Expect(len(config.Forms)).To(Equal(1))
+			Expect(len(config.Forms[0].FieldVisibility.Fields)).To(Equal(1))
+			Expect(config.Forms[0].FieldVisibility.Fields[0].Id).To(Equal("test:testProperty"))
+
+			properties = []lablr.Property{
+				lablr.Property{Name: "test:testProperty"},
+				lablr.Property{Name: "test:testProperty2"},
+			}
+			t = lablr.Type{Name: "test:testType", Properties: properties}
+			config = lablr.NewSearchConfig(t)
+			Expect(len(config.Forms[0].FieldVisibility.Fields)).To(Equal(2))
+			Expect(config.Forms[0].FieldVisibility.Fields[1].Id).To(Equal("test:testProperty2"))
+		})
+	})
 })
