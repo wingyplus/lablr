@@ -6,3 +6,4 @@ deps-test: deps
 	@go install -v github.com/onsi/ginkgo/ginkgo
 test: deps deps-test
 	@ginkgo -r --randomizeAllSpecs --failOnPending
+	@tests/iss_2.sh
