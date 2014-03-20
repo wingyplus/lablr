@@ -98,10 +98,10 @@ var _ = Describe("Share config", func() {
 	})
 	Describe("Config", func() {
 		It("should has forms", func() {
-			var cnf *config.Config = &config.Config{}
+			var cnf *config.Config = config.NewConfig("", "")
 			cnf.AddForm(config.Form{Id: "search"})
 
-			Expect(len(cnf.Forms)).To(Equal(1))
+			Expect(len(cnf.Forms.Forms)).To(Equal(1))
 		})
 		It("should be evaluator", func() {
 			var cnf *config.Config = &config.Config{Evaluator: "string-compare"}
@@ -116,7 +116,7 @@ var _ = Describe("Share config", func() {
 				var fieldVisibility *config.FieldVisibility = new(config.FieldVisibility)
 				fieldVisibility.Add(config.Field{Id: "test:testProperty"})
 				var form config.Form = config.Form{Id: "search", FieldVisibility: fieldVisibility}
-				var cnf *config.Config = &config.Config{Evaluator: "string-compare", Condition: "test:testType"}
+				var cnf *config.Config = config.NewConfig("string-compare", "test:testType")
 				cnf.AddForm(form)
 
 				expectXML := `<config evaluator="string-compare" condition="test:testType"><forms><form id="search"><field-visibility><show id="test:testProperty"></show></field-visibility></form></forms></config>`
@@ -124,6 +124,30 @@ var _ = Describe("Share config", func() {
 
 				Expect(string(actualXML)).To(Equal(expectXML))
 			})
+			It("should be omited when has no value in Form", func() {
+				var cnf *config.Config = &config.Config{Evaluator: "string-compare", Condition: "DocumentLibrary"}
+
+				expectXML := `<config evaluator="string-compare" condition="DocumentLibrary"></config>`
+				actualXML, _ := xml.Marshal(cnf)
+
+				Expect(string(actualXML)).To(Equal(expectXML))
+			})
+		})
+	})
+	Describe("Forms", func() {
+		It("have forms", func() {
+			var forms *config.Forms = new(config.Forms)
+			forms.AddForm(config.Form{})
+
+			Expect(len(forms.Forms)).To(Equal(1))
+		})
+		It("should marshal to xml", func() {
+			var forms *config.Forms = new(config.Forms)
+
+			expectXML := `<forms></forms>`
+			actualXML, _ := xml.Marshal(forms)
+
+			Expect(string(actualXML)).To(Equal(expectXML))
 		})
 	})
 })

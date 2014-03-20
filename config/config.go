@@ -29,13 +29,29 @@ type Form struct {
 	FieldVisibility *FieldVisibility
 }
 
+type Forms struct {
+	XMLName xml.Name `xml:"forms,omitempty"`
+	Forms   []Form
+}
+
+func (fs *Forms) AddForm(f Form) {
+	fs.Forms = append(fs.Forms, f)
+}
+
 type Config struct {
 	XMLName   xml.Name `xml:"config"`
 	Evaluator string   `xml:"evaluator,attr"`
 	Condition string   `xml:"condition,attr"`
-	Forms     []Form   `xml:"forms>form"`
+	Forms     *Forms
+}
+
+func NewConfig(evaluator, condition string) (cnf *Config) {
+	cnf = &Config{Evaluator: evaluator, Condition: condition}
+	cnf.Forms = new(Forms)
+
+	return
 }
 
 func (c *Config) AddForm(f Form) {
-	c.Forms = append(c.Forms, f)
+	c.Forms.AddForm(f)
 }

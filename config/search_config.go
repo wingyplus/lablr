@@ -12,7 +12,7 @@ func NewSearchConfig(t lablr.Type) (config *Config) {
 
 	form := Form{Id: "search", FieldVisibility: fieldVisibility}
 
-	config = &Config{Evaluator: "model-type", Condition: t.Name}
+	config = NewConfig("model-type", t.Name)
 	config.AddForm(form)
 
 	return config
