@@ -5,7 +5,6 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/wingyplus/lablr/cli"
 	"io/ioutil"
-	"os"
 	"testing"
 )
 
@@ -15,7 +14,7 @@ func TestXMLSpecs(t *testing.T) {
 }
 
 func File(path string) ([]byte, error) {
-	return ioutil.ReadFile(os.Getenv("GOPATH") + "/src/github.com/wingyplus/lablr/" + path)
+	return ioutil.ReadFile("../" + path)
 }
 
 var _ = Describe("CLI", func() {
