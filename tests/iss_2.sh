@@ -1,11 +1,13 @@
+#!/bin/bash
+
 LABLR_HOME="`pwd`"
 
-function teardown() 
+teardown()
 {
 	rm -rf "$LABLR_HOME/iss_2_result.xml"
 }
 
-function _eq()
+_eq()
 {
 	local actual=$1
 	local expect=$2
