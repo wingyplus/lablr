@@ -1,0 +1,12 @@
+<alfresco-config>
+    <config evaluator="model-type" condition="test:typeName">
+        <forms>
+            <form id="search">
+                <field-visibility>
+                    <show id="test:propertyName"></show>
+                    <show id="test:propertyName_2"></show>
+                </field-visibility>
+            </form>
+        </forms>
+    </config>
+</alfresco-config>

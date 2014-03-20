@@ -10,7 +10,7 @@ import (
 var _ = Describe("Alfresco Config", func() {
 	It("have configs", func() {
 		var alfrescoConfig *config.AlfrescoConfig = new(config.AlfrescoConfig)
-		var cnf config.Config = config.Config{Evaluator: "string-compare", Condition: "DocumentLibrary"}
+		var cnf *config.Config = &config.Config{Evaluator: "string-compare", Condition: "DocumentLibrary"}
 
 		alfrescoConfig.AddConfig(cnf)
 
@@ -33,7 +33,7 @@ var _ = Describe("Alfresco Config", func() {
 			Expect(string(actualXML)).To(Equal(expectXML))
 		})
 		It("should has config in alfresco-config", func() {
-			alfrescoConfig.AddConfig(config.Config{Evaluator: "string-compare", Condition: "DocumentLibrary"})
+			alfrescoConfig.AddConfig(&config.Config{Evaluator: "string-compare", Condition: "DocumentLibrary"})
 
 			expectXML := `<alfresco-config><config evaluator="string-compare" condition="DocumentLibrary"></config></alfresco-config>`
 			actualXML, _ := xml.Marshal(alfrescoConfig)

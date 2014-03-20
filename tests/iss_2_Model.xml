@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model name="test:testModel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+    <description>Test Model</description>
+    <author>test@mail.com</author>
+    <version>1.0</version>
+
+    <imports>
+        <import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+        <import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+    </imports>
+
+    <namespaces>
+        <namespace uri="http://www.alfresco.org/model/test/1.0" prefix="test" />
+    </namespaces>
+
+    <types>
+        <type name="test:typeName">
+            <title>Test Name</title>
+            <parent>cm:content</parent>
+            <properties>
+                <property name="test:propertyName">
+                    <type>d:text</type>
+                </property>
+                <property name="test:propertyName_2">
+                    <type>d:text</type>
+                </property>
+            </properties>
+        </type>
+    </types>
+</model>
