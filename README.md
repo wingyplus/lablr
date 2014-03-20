@@ -5,4 +5,4 @@ Drone.io [![Build Status](https://drone.io/github.com/wingyplus/lablr/status.png
 
 Travis-ci [![Build Status](https://travis-ci.org/wingyplus/lablr.svg?branch=master)](https://travis-ci.org/wingyplus/lablr)
 
-Lablr is a Data Dictionary Message generator in Alfresco
+Lablr is a command line parsing XML from Model file to generate message resources bundle and Share config custom.
